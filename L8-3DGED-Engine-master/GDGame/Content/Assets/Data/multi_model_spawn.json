@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "meta": {
+    "author": "NMCG",
+    "asset": "Multi game object loaded from JSON"
+  },
+  "spawns": [
+    {
+      "position": [
+        -10,
+        5,
+        0
+      ],
+      "rotationDegrees": [
+        -90,
+        0,
+        0
+      ],
+      "scale": [
+        3,
+        3,
+        3
+      ],
+      "textureName": "checkerboard",
+      "modelName": "monkey1",
+      "objectName": "spawn-1"
+    },
+    {
+      "position": [
+        10,
+        10,
+        -5
+      ],
+      "rotationDegrees": [
+        -90,
+        45,
+        0
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ],
+      "textureName": "crate1",
+      "modelName": "monkey1",
+      "objectName": "spawn-2"
+    },
+    {
+      "position": [
+        20,
+        10,
+        -5
+      ],
+      "rotationDegrees": [
+        -90,
+        45,
+        0
+      ],
+      "scale": [
+        2,
+        4,
+        2
+      ],
+      "textureName": "crate1",
+      "modelName": "monkey1",
+      "objectName": "spawn-3"
+    },
+    {
+      "position": [
+        30,
+        10,
+        -5
+      ],
+      "rotationDegrees": [
+        -90,
+        45,
+        0
+      ],
+      "scale": [
+        0.9,
+        2.6,
+        4.1
+      ],
+      "textureName": "ground_grass",
+      "modelName": "cube",
+      "objectName": "spawn-4"
+    },
+    {
+      "position": [
+        50,
+        10,
+        -5
+      ],
+      "rotationDegrees": [
+        -90,
+        45,
+        -45
+      ],
+      "scale": [
+        0.5,
+        0.4,
+        0.3
+      ],
+      "textureName": "mona lisa",
+      "modelName": "teapot",
+      "objectName": "spawn-5"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36429.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDGame", "GDGame\GDGame.csproj", "{96BB32B5-4A60-400A-9E88-FB3EB74D5A4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDEngine", "GDEngine\GDEngine.csproj", "{F6643AD7-8DF0-47F1-B365-44F0C6983E1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		cover.runsettings.xml = cover.runsettings.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDEngineTests", "GDEngineTests\GDEngineTests.csproj", "{7A0A7889-7DC2-4CA7-B747-0C7DCD830F67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96BB32B5-4A60-400A-9E88-FB3EB74D5A4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96BB32B5-4A60-400A-9E88-FB3EB74D5A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96BB32B5-4A60-400A-9E88-FB3EB74D5A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96BB32B5-4A60-400A-9E88-FB3EB74D5A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6643AD7-8DF0-47F1-B365-44F0C6983E1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6643AD7-8DF0-47F1-B365-44F0C6983E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6643AD7-8DF0-47F1-B365-44F0C6983E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6643AD7-8DF0-47F1-B365-44F0C6983E1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0A7889-7DC2-4CA7-B747-0C7DCD830F67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0A7889-7DC2-4CA7-B747-0C7DCD830F67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0A7889-7DC2-4CA7-B747-0C7DCD830F67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0A7889-7DC2-4CA7-B747-0C7DCD830F67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D089D40A-B12A-438E-A9F0-AFC3DC73F32F}
+	EndGlobalSection
+EndGlobal

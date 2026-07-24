@@ -1,0 +1,22 @@
+<RunSettings>
+  <RunConfiguration>
+   <ResultsDirectory>.\TestResults</ResultsDirectory> 
+   <TargetFrameworkVersion>net8.0</TargetFrameworkVersion>   <!-- your .NET Version -->
+    <MaxCpuCount>4</MaxCpuCount>
+   <TestSessionTimeout>60000</TestSessionTimeout>
+  </RunConfiguration>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Blame" enabled="True">
+        <Configuration>
+          <CollectDump/>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+  <LoggerRunSettings>
+    <Loggers>
+      <Logger friendlyName="trx" />  <!-- if you dont have any other logger -->
+    </Loggers>
+  </LoggerRunSettings>
+ </RunSettings>

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "meta": {
+    "author": "NMCG",
+    "asset": "Single game object loaded from JSON"
+  },
+  "position": [ -30, 5, 0 ],
+  "rotationDegrees": [ 45, 45, 45 ],
+  "scale": [ 4, 4, 4 ],
+  "textureName": "mona lisa", /*must be key name in _textureDictionary*/
+  "modelName": "cube", /*must be key name in _modelDictionary*/
+  "objectName": "spawn-0" /*use any name you want*/
+}
