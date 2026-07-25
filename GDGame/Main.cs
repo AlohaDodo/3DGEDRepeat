@@ -103,39 +103,42 @@ namespace GDGame
             InitializeSkyBox(scale);
             InitializeCollidableGround(scale);
             InitializePlayer();
+
+            //Adding my own map into the engine
+            InitializeICAmap();
             #endregion
 
-            #region Demos
+            //#region Demos
 
-            #region Animation curves
-            // Camera-demos
-            InitializeAnimationCurves();
-            #endregion
+            //#region Animation curves
+            //// Camera-demos
+            //InitializeAnimationCurves();
+            //#endregion
 
-            #region Collidables
-            // Demo event listeners on collision
-            InitializeCollisionEventListener();
+            //#region Collidables
+            //// Demo event listeners on collision
+            //InitializeCollisionEventListener();
 
-            // Collidable game object demos
-            DemoCollidablePrimitive(new Vector3(0, 20, 5.1f), Vector3.One * 6, new Vector3(15, 45, 45));
-            DemoCollidablePrimitive(new Vector3(0, 10, 5.2f), Vector3.One * 1, new Vector3(45, 0, 0));
-            DemoCollidablePrimitive(new Vector3(0, 5, 5.3f), Vector3.One * 1, new Vector3(0, 0, 45));
-            DemoCollidableModel(new Vector3(0, 50, 10), Vector3.Zero, new Vector3(2, 1.25f, 2));
-            DemoCollidableModel(new Vector3(0, 40, 11), Vector3.Zero, new Vector3(2, 1.25f, 2));
-            DemoCollidableModel(new Vector3(0, 25, 12), Vector3.Zero, new Vector3(2, 1.25f, 2));
-            #endregion
+            //// Collidable game object demos
+            //DemoCollidablePrimitive(new Vector3(0, 20, 5.1f), Vector3.One * 6, new Vector3(15, 45, 45));
+            //DemoCollidablePrimitive(new Vector3(0, 10, 5.2f), Vector3.One * 1, new Vector3(45, 0, 0));
+            //DemoCollidablePrimitive(new Vector3(0, 5, 5.3f), Vector3.One * 1, new Vector3(0, 0, 45));
+            //DemoCollidableModel(new Vector3(0, 50, 10), Vector3.Zero, new Vector3(2, 1.25f, 2));
+            //DemoCollidableModel(new Vector3(0, 40, 11), Vector3.Zero, new Vector3(2, 1.25f, 2));
+            //DemoCollidableModel(new Vector3(0, 25, 12), Vector3.Zero, new Vector3(2, 1.25f, 2));
+            //#endregion
 
-            #region Alpha effect
-            DemoAlphaCutoutFoliage(new Vector3(0, 10 /*note Y=heightscale/2*/, 0), 12, 20);
-            #endregion
+            //#region Alpha effect
+            //DemoAlphaCutoutFoliage(new Vector3(0, 10 /*note Y=heightscale/2*/, 0), 12, 20);
+            //#endregion
 
-            #region Loading GameObjects from JSON
-            DemoLoadFromJSON();
-            #endregion
+            //#region Loading GameObjects from JSON
+            //DemoLoadFromJSON();
+            //#endregion
 
-            #region Sequencing using Orchestration
-            DemoOrchestrationSystem();
-            #endregion
+            //#region Sequencing using Orchestration
+            //DemoOrchestrationSystem();
+            //#endregion
 
             #region PBR Lighting
             //DemoPBRGameObject(string objectName, string modelName, Vector3 position, Vector3 scale, Vector3 eulerRotationDegrees,
@@ -301,6 +304,12 @@ namespace GDGame
 
             // Adds an inventory to the player
             player.AddComponent<InventoryComponent>();
+        }
+
+        //Adding my own map into the engine
+        private void InitializeICAmap()
+        {
+            InitializeModel(Vector3.Zero, new Vector3(-90, 0, 0), Vector3.One * 2, "white_1x1", "ICAmap", "ICA_map");
         }
 
         private void InitializePIPCamera(Vector3 position,
@@ -956,7 +965,7 @@ namespace GDGame
 
             var model = _modelDictionary.Get(modelName);
             var texture = _textureDictionary.Get(textureName);
-            var meshFilter = MeshFilterFactory.CreateFromModel(model, _graphics.GraphicsDevice, 0, 0);
+            var meshFilter = MeshFilterFactory.CreateFromModel(model, _graphics.GraphicsDevice);
             gameObject.AddComponent(meshFilter);
 
             var meshRenderer = gameObject.AddComponent<MeshRenderer>();
@@ -1057,7 +1066,6 @@ namespace GDGame
             base.Dispose(disposing);
         }
 
-        #endregion
 
         #region Demo Methods (remove in the game)
 

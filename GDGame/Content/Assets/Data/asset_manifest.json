@@ -138,8 +138,12 @@
       "contentPath": "assets/models/teapot_lowpoly"
     },
     {
-      "name": "plane",
-      "contentPath": "assets/models/plane"
+        "name": "plane",
+        "contentPath": "assets/models/plane"
+    },
+    {
+        "name": "ICAmap",
+        "contentPath": "assets/models/ICAmap"
     }
   ],
   "sounds": [
