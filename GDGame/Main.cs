@@ -336,8 +336,29 @@ namespace GDGame
         //Adding my assets for the physics room
         private void InitializePhysicsRoomAssets()
         {
-            InitializeModel(new Vector3(26f, 0, -54.5f), new Vector3(-90, 0, 0), new Vector3(15, 3 , 1), "bowlingLane", "bowlingLaneModel", "physics_room_bowling_lane");
-            InitializeModel(new Vector3(12f, 2, -54.5f), new Vector3(-90, 0, 0), Vector3.One, "white_1x1", "bowlingBallModel", "physics_room_bowling_ball");
+            //Loading in the model of the bowling lane and setting up the collider and rigidbody for it (code taken from ground collider)
+            GameObject bowlingLane =InitializeModel(new Vector3(26f, 0, -54.5f), new Vector3(0, 0, 0), new Vector3(1.3f, 3f , 1f), "bowlingLane", "bowlingLaneModel", "physics_room_bowling_lane");
+            
+            var laneCollider = bowlingLane.AddComponent<BoxCollider>();
+            laneCollider.Size = new Vector3(56f, 4.2f, 1f);
+            laneCollider.Center = Vector3.Zero;
+            laneCollider.IsTrigger = false;
+
+            var laneRigidBody = bowlingLane.AddComponent<RigidBody>();
+            laneRigidBody.BodyType = BodyType.Static;
+            bowlingLane.IsStatic = true;
+            bowlingLane.Layer = LayerMask.Ground;
+
+            //Loading in the model of the bowling ball and setting up the collider and rigidbody for it (code taken from ground collider)
+            GameObject bowlingBall = InitializeModel(new Vector3(12f, 14, -54.5f), new Vector3(-90, 0, 0), Vector3.One, "white_1x1", "bowlingBallModel", "physics_room_bowling_ball");
+
+            var ballCollider = bowlingBall.AddComponent<SphereCollider>();
+            ballCollider.Radius = 0.5f;
+
+            var ballRigidBody = bowlingBall.AddComponent<RigidBody>();
+            ballRigidBody.BodyType = BodyType.Dynamic;
+            ballRigidBody.Mass = 5f;
+
             InitializeModel(new Vector3(34f, 2, -54.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
             InitializeModel(new Vector3(36f, 2, -53.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
             InitializeModel(new Vector3(36f, 2, -55.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
