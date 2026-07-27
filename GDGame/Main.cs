@@ -78,7 +78,7 @@ namespace GDGame
         protected override void Initialize()
         {
             #region Core
-            Window.Title = "My Amazing Game";
+            Window.Title = "Dorota ICA";
             InitializeGraphics(ScreenResolution.R_WXGA_16_10_1280x800);
             InitializeMouse();
             InitializeContext();
@@ -106,6 +106,9 @@ namespace GDGame
 
             //Adding my own map into the engine
             InitializeICAmap();
+
+            //Collider for my own map floor
+            InitializeMapFloorCollider();
             #endregion
 
             //#region Demos
@@ -146,7 +149,7 @@ namespace GDGame
             //Color albedoColor, float roughness, float metallic);
             #endregion
 
-        #endregion
+#endregion
 
             // Mouse reticle
             InitializeUI();
@@ -290,6 +293,19 @@ namespace GDGame
             _sceneManager.ActiveScene.Add(gameObject);
         }
 
+        private void InitializeMapFloorCollider()
+        {
+            var floor = new GameObject("Map Floor Collider");
+            floor.Transform.TranslateTo(new Vector3(0, 0, 0));
+            var collider = floor.AddComponent<BoxCollider>();
+            collider.Size = new Vector3(68.2f, 0.5f, 68.2f);
+
+            var rigidBody = floor.AddComponent<RigidBody>();
+            rigidBody.BodyType = BodyType.Static;
+            
+            _sceneManager.ActiveScene.Add(floor);
+        }
+
         private void InitializePlayer()
         {
             GameObject player = InitializeModel(new Vector3(0, 5, 10),
@@ -310,6 +326,8 @@ namespace GDGame
         private void InitializeICAmap()
         {
             InitializeModel(Vector3.Zero, new Vector3(-90, 0, 0), Vector3.One * 2, "white_1x1", "ICAmap", "ICA_map");
+
+            InitializeMapFloorCollider();
         }
 
         private void InitializePIPCamera(Vector3 position,
@@ -709,40 +727,63 @@ namespace GDGame
             scene.Add(cameraGO);
             #endregion
 
-            #region First-person capsule + camera (parent/child)
+            //#region First-person capsule + camera (parent/child) 
 
-            // PARENT: physics + movement (feet at y = 0 here)
-            var parentGO = new GameObject(AppData.CAMERA_NAME_FIRST_PERSON_PARENT);
-            parentGO.Layer = LayerMask.IgnoreRaycast;
-            parentGO.Transform.TranslateTo(new Vector3(0f, 5f, 15f));
+            //// PARENT: physics + movement (feet at y = 0 here)
+            //var parentGO = new GameObject(AppData.CAMERA_NAME_FIRST_PERSON_PARENT);
+            //parentGO.Layer = LayerMask.IgnoreRaycast;
+            //parentGO.Transform.TranslateTo(new Vector3(0f, 10f, 15f));
 
-            // Capsule + rigidbody controller (kept upright internally)
-            var fpsController = parentGO.AddComponent<FirstPersonCapsuleController>();
-            fpsController.MoveSpeed = 8.0f;
-            fpsController.Acceleration = 50.0f;
-            fpsController.GroundFriction = 10.0f;
-            fpsController.JumpImpulse = 7.0f;
-            fpsController.CapsuleRadius = 0.5f;
-            fpsController.CapsuleHeight = 1.8f;
-            fpsController.GroundCheckDistance = 0.25f;
+            //// Capsule + rigidbody controller (kept upright internally)
+            //var fpsController = parentGO.AddComponent<FirstPersonCapsuleController>();
+            //fpsController.MoveSpeed = 8.0f;
+            //fpsController.Acceleration = 50.0f;
+            //fpsController.GroundFriction = 10.0f;
+            //fpsController.JumpImpulse = 7.0f;
+            //fpsController.CapsuleRadius = 0.5f;
+            //fpsController.CapsuleHeight = 1.8f;
+            //fpsController.GroundCheckDistance = 0.25f;
 
-            // camera that can pitch + yaw without affecting the collider
+            //// camera that can pitch + yaw without affecting the collider
+            //cameraGO = new GameObject(AppData.CAMERA_NAME_FIRST_PERSON);
+            //cameraGO.Transform.SetParent(parentGO.Transform);
+
+            //// Local offset from feet → eye height
+            //cameraGO.Transform.TranslateTo(new Vector3(0, 1.6f, 0));
+            //camera = cameraGO.AddComponent<Camera>();
+            //camera.FieldOfView = MathHelper.ToRadians(80.0f);
+            //var mouseLook = cameraGO.AddComponent<MouseYawPitchController>();
+
+            //// Add both objects to the scene so their components are updated
+            //scene.Add(parentGO);
+            //scene.Add(cameraGO);
+
+            //// Make this the active camera
+            //scene.ActiveCamera = camera;
+            //#endregion
+
+            #region First person camera
+            //camera GO
             cameraGO = new GameObject(AppData.CAMERA_NAME_FIRST_PERSON);
-            cameraGO.Transform.SetParent(parentGO.Transform);
 
-            // Local offset from feet → eye height
+            //set position
             cameraGO.Transform.TranslateTo(new Vector3(0, 0, 0));
+
+            //add camera component to the GO
             camera = cameraGO.AddComponent<Camera>();
-            camera.FieldOfView = MathHelper.ToRadians(80.0f);
-            var mouseLook = cameraGO.AddComponent<MouseYawPitchController>();
-   
-            // Add both objects to the scene so their components are updated
-            scene.Add(parentGO);
+            camera.FarPlane = 1000;
+            //feed off whatever screen dimensions you set InitializeGraphics
+            camera.AspectRatio = (float)_graphics.PreferredBackBufferWidth / _graphics.PreferredBackBufferHeight;
+            cameraGO.AddComponent<KeyboardWASDController>();
+            cameraGO.AddComponent<MouseYawPitchController>();
+
+            // Add it to the scene
             scene.Add(cameraGO);
 
-            // Make this the active camera
-            scene.ActiveCamera = camera;
-            #endregion
+            //DO NOT CHANGE - First-person is default active camera
+            scene.SetActiveCamera(AppData.CAMERA_NAME_FIRST_PERSON);
+            #endregion 
+
 
             #region Curve camera
             cameraGO = new GameObject(AppData.CAMERA_NAME_INTRO_CURVE);
