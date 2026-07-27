@@ -325,7 +325,7 @@ namespace GDGame
         //Adding my own map into the engine
         private void InitializeICAmap()
         {
-            InitializeModel(Vector3.Zero, new Vector3(-90, 0, 0), Vector3.One * 2, "white_1x1", "ICAmap", "ICA_map");
+            InitializeModel(Vector3.Zero, new Vector3(-90, 0, 0), Vector3.One * 2, "pink", "ICAmap", "ICA_map");
 
             InitializeMapFloorCollider();
         }

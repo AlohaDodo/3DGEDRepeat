@@ -97,6 +97,12 @@ namespace GDEngine.Core.Components
 
             if (dir.LengthSquared() != 0)
                 Move(dir, speed);
+
+            // Lock player Y to the ground
+            // Without this, the player could float or fall due to Transform manipulations or physics
+            // Here we simply overwrite the Y position to keep the player grounded at Y = 0.5
+            Vector3 pos = Transform.Position;
+            Transform.TranslateTo(new Vector3(pos.X, 9f, pos.Z));
         }
 
         #endregion

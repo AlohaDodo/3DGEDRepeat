@@ -56,8 +56,12 @@
       "contentPath": "assets/textures/demo/checkerboard"
     },
     {
-      "name": "mona lisa",
-      "contentPath": "assets/textures/demo/mona lisa"
+        "name": "mona lisa",
+        "contentPath": "assets/textures/demo/mona lisa"
+    },
+    {
+        "name": "pink",
+        "contentPath": "assets/textures/pink"
     },
     //UI - BACKGROUND
     {
