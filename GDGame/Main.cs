@@ -109,6 +109,9 @@ namespace GDGame
 
             //Collider for my own map floor
             InitializeMapFloorCollider();
+
+            //Adding my assets for the physics room
+            InitializePhysicsRoomAssets();
             #endregion
 
             //#region Demos
@@ -328,6 +331,16 @@ namespace GDGame
             InitializeModel(Vector3.Zero, new Vector3(-90, 0, 0), Vector3.One * 2, "pink", "ICAmap", "ICA_map");
 
             InitializeMapFloorCollider();
+        }
+
+        //Adding my assets for the physics room
+        private void InitializePhysicsRoomAssets()
+        {
+            InitializeModel(new Vector3(26f, 0, -54.5f), new Vector3(-90, 0, 0), new Vector3(15, 3 , 1), "bowlingLane", "bowlingLaneModel", "physics_room_bowling_lane");
+            InitializeModel(new Vector3(12f, 2, -54.5f), new Vector3(-90, 0, 0), Vector3.One, "white_1x1", "bowlingBallModel", "physics_room_bowling_ball");
+            InitializeModel(new Vector3(34f, 2, -54.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
+            InitializeModel(new Vector3(36f, 2, -53.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
+            InitializeModel(new Vector3(36f, 2, -55.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
         }
 
         private void InitializePIPCamera(Vector3 position,

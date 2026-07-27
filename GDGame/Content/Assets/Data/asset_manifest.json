@@ -63,6 +63,10 @@
         "name": "pink",
         "contentPath": "assets/textures/pink"
     },
+    {
+        "name": "bowlingLane",
+        "contentPath": "assets/textures/bowlingLane"
+    },
     //UI - BACKGROUND
     {
       "name": "white_1x1",
@@ -148,6 +152,18 @@
     {
         "name": "ICAmap",
         "contentPath": "assets/models/ICAmap"
+    },
+    {
+        "name": "bowlingLaneModel",
+        "contentPath": "assets/models/bowlingLane"
+    },
+    {
+        "name": "bowlingBallModel",
+        "contentPath": "assets/models/bowlingBall"
+    },
+    {
+        "name": "bowlingPinModel",
+        "contentPath": "assets/models/bowlingPin"
     }
   ],
   "sounds": [

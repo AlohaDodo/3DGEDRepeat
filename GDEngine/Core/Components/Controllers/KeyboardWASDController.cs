@@ -103,6 +103,12 @@ namespace GDEngine.Core.Components
             // Here we simply overwrite the Y position to keep the player grounded at Y = 0.5
             Vector3 pos = Transform.Position;
             Transform.TranslateTo(new Vector3(pos.X, 9f, pos.Z));
+
+            //Helping me place assets
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                System.Diagnostics.Debug.WriteLine(Transform.Position);
+            }
         }
 
         #endregion
