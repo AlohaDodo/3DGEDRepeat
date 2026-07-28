@@ -302,13 +302,37 @@ namespace GDGame
         {
             var floor = new GameObject("Map Floor Collider");
             floor.Transform.TranslateTo(new Vector3(0, 0, 0));
+
             var collider = floor.AddComponent<BoxCollider>();
-            collider.Size = new Vector3(68.2f, 0.5f, 68.2f);
+            collider.Size = new Vector3(300f, 0.5f, 300f);
+            collider.Center = new Vector3(0, 0.25f, 0);
 
             var rigidBody = floor.AddComponent<RigidBody>();
             rigidBody.BodyType = BodyType.Static;
+
+            floor.IsStatic = true;
+            floor.Layer = LayerMask.Ground;
             
             _sceneManager.ActiveScene.Add(floor);
+        }
+
+        private void CreateWallCollider(string name, Vector3 position, Vector3 size)
+        {
+            var wall = new GameObject(name);
+            wall.Transform.TranslateTo(position);
+
+            var collider = wall.AddComponent<BoxCollider>();
+            collider.Size = size;
+            collider.Center = Vector3.Zero;
+            collider.IsTrigger = false;
+
+            var rigidBody = wall.AddComponent<RigidBody>();
+            rigidBody.BodyType = BodyType.Static;
+
+            wall.IsStatic = true;
+            wall.Layer = LayerMask.Ground;
+
+            _sceneManager.ActiveScene.Add(wall);
         }
 
         private void InitializePlayer()
@@ -341,15 +365,15 @@ namespace GDGame
             //Loading in the model of the bowling lane and setting up the collider and rigidbody for it (code taken from ground collider)
             GameObject bowlingLane =InitializeModel(new Vector3(26f, 0, -54.5f), new Vector3(0, 0, 0), new Vector3(1.3f, 3f , 1f), "bowlingLane", "bowlingLaneModel", "physics_room_bowling_lane");
             
-            //var laneCollider = bowlingLane.AddComponent<BoxCollider>();
-            //laneCollider.Size = new Vector3(56f, 5f, 3f);
-            //laneCollider.Center = new Vector3(0f, 0.5f, 0f);
-            //laneCollider.IsTrigger = false;
+            var laneCollider = bowlingLane.AddComponent<BoxCollider>();
+            laneCollider.Size = new Vector3(64f, 0.5f, 5f);
+            laneCollider.Center = new Vector3(0f, 0.8f, 0f);
+            laneCollider.IsTrigger = false;
 
-            //var laneRigidBody = bowlingLane.AddComponent<RigidBody>();
-            //laneRigidBody.BodyType = BodyType.Static;
-            //bowlingLane.IsStatic = true;
-            //bowlingLane.Layer = LayerMask.Ground;
+            var laneRigidBody = bowlingLane.AddComponent<RigidBody>();
+            laneRigidBody.BodyType = BodyType.Static;
+            bowlingLane.IsStatic = true;
+            bowlingLane.Layer = LayerMask.Ground;
 
             //Loading in the model of the bowling ball and setting up the collider and rigidbody for it (code taken from ground collider)
             GameObject bowlingBall = InitializeModel(new Vector3(12f, 14, -54.5f), new Vector3(-90, 0, 0), Vector3.One, "white_1x1", "bowlingBallModel", "physics_room_bowling_ball");
@@ -392,6 +416,12 @@ namespace GDGame
             var pin3RigidBody = pin3.AddComponent<RigidBody>();
             pin3RigidBody.BodyType = BodyType.Dynamic;
             pin3RigidBody.Mass = 5f;
+
+            //Adding wall colliders so the pins don't roll through the walls lol
+            CreateWallCollider("Back wall", new Vector3(27.5f, 1f, -64.15f), new Vector3(41f, 9f, 2f));
+            CreateWallCollider("Front wall", new Vector3(29.2f, 1f, -22.22f), new Vector3(25.5f, 9f, 2f));
+            CreateWallCollider("Right wall", new Vector3(42.8f, 1f, -44.5f), new Vector3(4f, 9f, 40f));
+         
         }
 
         //Bowling ball impulse method to be called when the player presses B
