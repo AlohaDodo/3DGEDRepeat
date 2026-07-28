@@ -68,6 +68,7 @@ namespace GDGame
 
         private RigidBody _bowlingBallRigidBody;
         private GameObject _currentLookedAtObject;
+        private bool _showPhysicsRoomText = false;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -115,6 +116,9 @@ namespace GDGame
 
             //Adding my assets for the physics room
             InitializePhysicsRoomAssets();
+
+            //Physics room trigger part
+            //UpdatePhysicsRoomText();
             #endregion
 
             //#region Demos
@@ -422,7 +426,6 @@ namespace GDGame
             CreateWallCollider("Back wall", new Vector3(27.5f, 1f, -64.15f), new Vector3(41f, 9f, 2f));
             CreateWallCollider("Front wall", new Vector3(29.2f, 1f, -22.22f), new Vector3(25.5f, 9f, 2f));
             CreateWallCollider("Right wall", new Vector3(42.8f, 1f, -44.5f), new Vector3(4f, 9f, 40f));
-         
         }
 
         //Bowling ball impulse method to be called when the player presses B
@@ -450,6 +453,27 @@ namespace GDGame
                 _bowlingBallRigidBody.AddImpulse(Vector3.Right * 100f);
             }
         }
+
+        private void UpdatePhysicsRoomText()
+        {
+            var camera = _sceneManager.ActiveScene.ActiveCamera;
+
+            if (camera == null)
+                return;
+
+            Vector3 position = camera.GameObject.Transform.Position;
+
+            if (position.X >= 2f && position.X <= 43f && position.Z >= -64f && position.Z <= -22f)
+            {
+                _showPhysicsRoomText = true;
+            }
+
+            else 
+            { 
+                _showPhysicsRoomText = false;
+            }
+        }
+
 
         private void InitializePIPCamera(Vector3 position,
       Viewport viewport, int depth, int index = 0)
@@ -1104,8 +1128,25 @@ namespace GDGame
                 return $"{go.Name}  d={hit.Distance:F1}";
             };
 
-            _sceneManager.ActiveScene.Add(uiReticleGO);
+            //Physics room instructions text
+            var physicsRoomInstructionsText = uiReticleGO.AddComponent<UIText>();
+            physicsRoomInstructionsText.Font = uiFont;
+            physicsRoomInstructionsText.Color = Color.White;
+            physicsRoomInstructionsText.Anchor = TextAnchor.Bottom;
 
+            physicsRoomInstructionsText.PositionProvider = () =>
+                new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height - 50);
+
+            physicsRoomInstructionsText.TextProvider = () => 
+            {
+                if (!_showPhysicsRoomText)
+                    return string.Empty;
+
+                return
+                "Walk towards the bowling ball. Press B to launch it. \n";
+            };
+
+            _sceneManager.ActiveScene.Add(uiReticleGO);
             // Hide mouse since reticle will take its place
             IsMouseVisible = false;
         }
@@ -1363,6 +1404,9 @@ namespace GDGame
             
             //Calling my own method for the bowling ball
             UpdateBowlingBall();
+
+            //Calling my own method for physics room trigger
+            UpdatePhysicsRoomText();
 
             DemoEventPublish();
             DemoCameraSwitch();
