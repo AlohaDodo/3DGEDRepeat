@@ -65,6 +65,8 @@ namespace GDGame
         private float _currentHealth = 100;
         private MenuManager _menuManager;
         private UIDebugInfo _debugRenderer;
+
+        private RigidBody _bowlingBallRigidBody;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -355,13 +357,33 @@ namespace GDGame
             var ballCollider = bowlingBall.AddComponent<SphereCollider>();
             ballCollider.Radius = 0.5f;
 
-            var ballRigidBody = bowlingBall.AddComponent<RigidBody>();
-            ballRigidBody.BodyType = BodyType.Dynamic;
-            ballRigidBody.Mass = 5f;
+            _bowlingBallRigidBody = bowlingBall.AddComponent<RigidBody>();
+            _bowlingBallRigidBody.BodyType = BodyType.Dynamic;
+            _bowlingBallRigidBody.Mass = 5f;
 
             InitializeModel(new Vector3(34f, 2, -54.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
             InitializeModel(new Vector3(36f, 2, -53.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
             InitializeModel(new Vector3(36f, 2, -55.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
+        }
+
+        //Bowling ball impulse method to be called when the player presses B
+        private void UpdateBowlingBall()
+        {
+            bool launchPressed = _newKBState.IsKeyDown(Keys.B) && !_oldKBState.IsKeyDown(Keys.B);
+
+            if (launchPressed && _bowlingBallRigidBody != null)
+            {
+                //Activates the physics
+                var physicsSystem = _sceneManager.ActiveScene.GetSystem<PhysicsSystem>();
+
+                if (_bowlingBallRigidBody.BodyHandle.HasValue)
+                {
+                    //Waking up the rigidbody - inspired by unity's rigidbody.WakeUp() method, as the bowling ball was not moving when the impulse was applied
+                    physicsSystem.Simulation.Awakener.AwakenBody(_bowlingBallRigidBody.BodyHandle.Value);
+                }
+
+                _bowlingBallRigidBody.AddImpulse(Vector3.Right * 100f);
+            }
         }
 
         private void InitializePIPCamera(Vector3 position,
@@ -1272,6 +1294,10 @@ namespace GDGame
         {
             // Get new state
             _newKBState = Keyboard.GetState();
+            
+            //Calling my own method for the bowling ball
+            UpdateBowlingBall();
+
             DemoEventPublish();
             DemoCameraSwitch();
             DemoToggleFullscreen();
