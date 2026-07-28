@@ -341,15 +341,15 @@ namespace GDGame
             //Loading in the model of the bowling lane and setting up the collider and rigidbody for it (code taken from ground collider)
             GameObject bowlingLane =InitializeModel(new Vector3(26f, 0, -54.5f), new Vector3(0, 0, 0), new Vector3(1.3f, 3f , 1f), "bowlingLane", "bowlingLaneModel", "physics_room_bowling_lane");
             
-            var laneCollider = bowlingLane.AddComponent<BoxCollider>();
-            laneCollider.Size = new Vector3(56f, 4.2f, 1f);
-            laneCollider.Center = Vector3.Zero;
-            laneCollider.IsTrigger = false;
+            //var laneCollider = bowlingLane.AddComponent<BoxCollider>();
+            //laneCollider.Size = new Vector3(56f, 5f, 3f);
+            //laneCollider.Center = new Vector3(0f, 0.5f, 0f);
+            //laneCollider.IsTrigger = false;
 
-            var laneRigidBody = bowlingLane.AddComponent<RigidBody>();
-            laneRigidBody.BodyType = BodyType.Static;
-            bowlingLane.IsStatic = true;
-            bowlingLane.Layer = LayerMask.Ground;
+            //var laneRigidBody = bowlingLane.AddComponent<RigidBody>();
+            //laneRigidBody.BodyType = BodyType.Static;
+            //bowlingLane.IsStatic = true;
+            //bowlingLane.Layer = LayerMask.Ground;
 
             //Loading in the model of the bowling ball and setting up the collider and rigidbody for it (code taken from ground collider)
             GameObject bowlingBall = InitializeModel(new Vector3(12f, 14, -54.5f), new Vector3(-90, 0, 0), Vector3.One, "white_1x1", "bowlingBallModel", "physics_room_bowling_ball");
@@ -361,9 +361,37 @@ namespace GDGame
             _bowlingBallRigidBody.BodyType = BodyType.Dynamic;
             _bowlingBallRigidBody.Mass = 5f;
 
-            InitializeModel(new Vector3(34f, 2, -54.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
-            InitializeModel(new Vector3(36f, 2, -53.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
-            InitializeModel(new Vector3(36f, 2, -55.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 3), "white_1x1", "bowlingPinModel", "physics_room_bowling_pin");
+            //Loading in the models of the pins and setting up the collider and rigidbodies for them (code taken from ground collider)
+            GameObject pin1 = InitializeModel(new Vector3(34f, 2, -54.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 1), "white_1x1", "bowlingPinTestModel", "physics_room_bowling_pin");
+            GameObject pin2 = InitializeModel(new Vector3(36f, 2, -53.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 1), "white_1x1", "bowlingPinTestModel", "physics_room_bowling_pin");
+            GameObject pin3 = InitializeModel(new Vector3(36f, 2, -55.5f), new Vector3(-90, 0, 0), new Vector3(0.5f, 0.5f, 1), "white_1x1", "bowlingPinTestModel", "physics_room_bowling_pin");
+
+            var pin1Collider = pin1.AddComponent<CapsuleCollider>();
+            pin1Collider.Radius = 0.2f;
+            pin1Collider.Height = 1.2f;
+            pin1Collider.Center = Vector3.Zero;
+
+            var pin1RigidBody = pin1.AddComponent<RigidBody>();
+            pin1RigidBody.BodyType = BodyType.Dynamic;
+            pin1RigidBody.Mass = 5f;
+
+            var pin2Collider = pin2.AddComponent<CapsuleCollider>();
+            pin2Collider.Radius = 0.2f;
+            pin2Collider.Height = 1.2f;
+            pin2Collider.Center = Vector3.Zero;
+
+            var pin2RigidBody = pin2.AddComponent<RigidBody>();
+            pin2RigidBody.BodyType = BodyType.Dynamic;
+            pin2RigidBody.Mass = 5f;
+            
+            var pin3Collider = pin3.AddComponent<CapsuleCollider>();
+            pin3Collider.Radius = 0.2f;
+            pin3Collider.Height = 1.2f;
+            pin3Collider.Center = Vector3.Zero;
+            
+            var pin3RigidBody = pin3.AddComponent<RigidBody>();
+            pin3RigidBody.BodyType = BodyType.Dynamic;
+            pin3RigidBody.Mass = 5f;
         }
 
         //Bowling ball impulse method to be called when the player presses B
