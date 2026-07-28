@@ -67,6 +67,7 @@ namespace GDGame
         private UIDebugInfo _debugRenderer;
 
         private RigidBody _bowlingBallRigidBody;
+        private GameObject _currentLookedAtObject;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -429,7 +430,13 @@ namespace GDGame
         {
             bool launchPressed = _newKBState.IsKeyDown(Keys.B) && !_oldKBState.IsKeyDown(Keys.B);
 
-            if (launchPressed && _bowlingBallRigidBody != null)
+            if (!launchPressed)
+                return;
+
+            if (_currentLookedAtObject == null || _currentLookedAtObject.Name != "physics_room_bowling_ball")
+                return;
+
+            if (_bowlingBallRigidBody != null)
             {
                 //Activates the physics
                 var physicsSystem = _sceneManager.ActiveScene.GetSystem<PhysicsSystem>();
@@ -1092,7 +1099,8 @@ namespace GDGame
                 var go = hit.Body?.GameObject;
                 if (go == null)
                     return string.Empty;
-
+                    
+                _currentLookedAtObject = go;
                 return $"{go.Name}  d={hit.Distance:F1}";
             };
 
