@@ -69,6 +69,7 @@ namespace GDGame
         private RigidBody _bowlingBallRigidBody;
         private GameObject _currentLookedAtObject;
         private bool _showPhysicsRoomText = false;
+        private MeshRenderer _monkeyRenderer;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -346,6 +347,9 @@ namespace GDGame
             GameObject player = InitializeModel(new Vector3(-20.833391f, 5f, -47.413177f),
                 new Vector3(0, 0, 0),
                 2 * Vector3.One, "crate1", "monkey1", AppData.PLAYER_NAME);
+
+            _monkeyRenderer = player.GetComponent<MeshRenderer>();
+            _monkeyRenderer.Enabled = false;
 
             var simpleDriveController = new SimpleDriveController();
             player.AddComponent(simpleDriveController);
@@ -1568,6 +1572,7 @@ namespace GDGame
                 events.Post(new CameraEvent(AppData.CAMERA_NAME_FIRST_PERSON));
                 events.Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Generic_1",
                   1, false, null));
+                  _monkeyRenderer.Enabled = false;
             }
 
             bool isThird = _newKBState.IsKeyDown(Keys.D2) && !_oldKBState.IsKeyDown(Keys.D2);
@@ -1576,6 +1581,7 @@ namespace GDGame
                 events.Post(new CameraEvent(AppData.CAMERA_NAME_THIRD_PERSON));
                 events.Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Mallet_Open_1",
                 1, false, null));
+                _monkeyRenderer.Enabled = true;
             }
 
             bool isCurve = _newKBState.IsKeyDown(Keys.D3) && !_oldKBState.IsKeyDown(Keys.D3);
@@ -1584,6 +1590,7 @@ namespace GDGame
                 events.Post(new CameraEvent(AppData.CAMERA_NAME_INTRO_CURVE));
                 events.Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Mallet_Open_1",
                 1, false, null));
+                _monkeyRenderer.Enabled = false;
             }
         }
 
