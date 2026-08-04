@@ -66,10 +66,12 @@ namespace GDGame
         private MenuManager _menuManager;
         private UIDebugInfo _debugRenderer;
 
+        //My own fields
         private RigidBody _bowlingBallRigidBody;
         private GameObject _currentLookedAtObject;
         private bool _showPhysicsRoomText = false;
         private MeshRenderer _monkeyRenderer;
+        private bool _showCameraRoomText = false;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -476,6 +478,25 @@ namespace GDGame
             else 
             { 
                 _showPhysicsRoomText = false;
+            }
+        }
+
+        private void UpdateCameraRoomText()
+        {
+            var camera = _sceneManager.ActiveScene.ActiveCamera;
+
+            if (camera == null)
+                return;
+
+            Vector3 position = camera.GameObject.Transform.Position;
+
+            if (position.X >= -45f && position.X <= -1f && position.Z >= -65f && position.Z <= -21f)
+            {
+                _showCameraRoomText = true;
+            }
+            else
+            {
+                _showCameraRoomText = false;
             }
         }
 
@@ -1154,6 +1175,24 @@ namespace GDGame
             _sceneManager.ActiveScene.Add(uiReticleGO);
             // Hide mouse since reticle will take its place
             IsMouseVisible = false;
+
+            //Camera room instructions text
+            var cameraRoomInstructionsText = uiReticleGO.AddComponent<UIText>();
+            cameraRoomInstructionsText.Font = uiFont;
+            cameraRoomInstructionsText.Color = Color.White;
+            cameraRoomInstructionsText.Anchor = TextAnchor.Bottom;
+
+            cameraRoomInstructionsText.PositionProvider = () =>
+                new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height - 50);
+
+            cameraRoomInstructionsText.TextProvider = () =>
+            {
+                if (!_showCameraRoomText)
+                    return string.Empty;
+
+                return
+                "Click 1 for first person, 2 for third person, 3 for overhead curved view. \n";
+            };
         }
 
         /// <summary>
@@ -1412,6 +1451,9 @@ namespace GDGame
 
             //Calling my own method for physics room trigger
             UpdatePhysicsRoomText();
+
+            //Calling my own method for camera room
+            UpdateCameraRoomText();
 
             DemoEventPublish();
             DemoCameraSwitch();
