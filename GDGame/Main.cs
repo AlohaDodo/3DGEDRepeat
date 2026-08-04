@@ -342,7 +342,8 @@ namespace GDGame
 
         private void InitializePlayer()
         {
-            GameObject player = InitializeModel(new Vector3(0, 5, 10),
+            //Moved monkey model to the camera room instead of the hub
+            GameObject player = InitializeModel(new Vector3(-20.833391f, 5f, -47.413177f),
                 new Vector3(0, 0, 0),
                 2 * Vector3.One, "crate1", "monkey1", AppData.PLAYER_NAME);
 
@@ -952,19 +953,19 @@ namespace GDGame
             var curve = new AnimationCurve3D(curveLoopType);
 
             // start
-            curve.AddKey(new Vector3(-20, 10, 40), 0);
+            curve.AddKey(new Vector3(-42, 10, -39), 0);
 
             // moving inward, slight rise
-            curve.AddKey(new Vector3(-10, 10, 30), 0.25f);
+            curve.AddKey(new Vector3(-32, 10, -49), 0.25f);
 
             // closest to origin (single “turn”)
-            curve.AddKey(new Vector3(0, 10, 30), 0.5f);
+            curve.AddKey(new Vector3(-22, 10, -49), 0.5f);
 
             // heading back out
-            curve.AddKey(new Vector3(10, 10, 40), 0.75f);
+            curve.AddKey(new Vector3(-12, 10, -39), 0.75f);
 
             // end
-            curve.AddKey(new Vector3(20, 10, 40), 1);
+            curve.AddKey(new Vector3(-2, 10, -39), 1);
 
             return curve;
         }
@@ -974,8 +975,8 @@ namespace GDGame
             var curve = new AnimationCurve3D(curveLoopType);
 
             // All points “in or around” origin, y ≈ 5 so we look slightly down from y=10–12.
-            curve.AddKey(new Vector3(-5,0,0), 0);
-            curve.AddKey(new Vector3(5,0,0), 1);
+            curve.AddKey(new Vector3(-27, 0, -79), 0);
+            curve.AddKey(new Vector3(-17, 0, -79), 1);
 
             return curve;
         }
@@ -1573,6 +1574,14 @@ namespace GDGame
             if (isThird)
             {
                 events.Post(new CameraEvent(AppData.CAMERA_NAME_THIRD_PERSON));
+                events.Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Mallet_Open_1",
+                1, false, null));
+            }
+
+            bool isCurve = _newKBState.IsKeyDown(Keys.D3) && !_oldKBState.IsKeyDown(Keys.D3);
+            if (isCurve)
+            {
+                events.Post(new CameraEvent(AppData.CAMERA_NAME_INTRO_CURVE));
                 events.Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Mallet_Open_1",
                 1, false, null));
             }
