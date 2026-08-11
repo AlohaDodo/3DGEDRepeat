@@ -72,6 +72,8 @@ namespace GDGame
         private bool _showPhysicsRoomText = false;
         private MeshRenderer _monkeyRenderer;
         private bool _showCameraRoomText = false;
+        private Transform _audioEmmitterLeft;
+        private Transform _audioEmmitterRight;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -122,6 +124,9 @@ namespace GDGame
 
             //Physics room trigger part
             //UpdatePhysicsRoomText();
+
+            //Audio room
+            InitializeAudioRoom();
             #endregion
 
             //#region Demos
@@ -498,6 +503,19 @@ namespace GDGame
             {
                 _showCameraRoomText = false;
             }
+        }
+
+        private void InitializeAudioRoom()
+        {
+            var leftEmitter = new GameObject("Audio Emitter Left");
+            leftEmitter.Transform.TranslateTo(new Vector3(-40f, 9f, 43f));
+            _audioEmmitterLeft = leftEmitter.Transform;
+            _sceneManager.ActiveScene.Add(leftEmitter);
+
+            var rightEmitter = new GameObject("Audio Emitter Right");
+            rightEmitter.Transform.TranslateTo(new Vector3(-4f, 9f, 43f));
+            _audioEmmitterRight = rightEmitter.Transform;
+            _sceneManager.ActiveScene.Add(rightEmitter);
         }
 
 
@@ -1585,15 +1603,20 @@ namespace GDGame
                     0.1f, 4));
             }
 
+            //testing - press 7 for left side
             bool isD7Pressed = _newKBState.IsKeyDown(Keys.D7) && !_oldKBState.IsKeyDown(Keys.D7);
+
             if (isD7Pressed)
             {
-                //expensive and crude => move to Component::Start()
-                var go = _sceneManager.ActiveScene.Find(go => go.Name.Equals(AppData.PLAYER_NAME));
-                Transform emitterTransform = go.Transform;
+                events.Publish(new PlaySfxEvent("hand_gun1", 1f, true, _audioEmmitterLeft));
+            }
 
-                events.Publish(new PlaySfxEvent("hand_gun1",
-                    1, true, emitterTransform));
+            //press 8 for right side
+            bool isD8Pressed = _newKBState.IsKeyDown(Keys.D8) && !_oldKBState.IsKeyDown(Keys.D8);
+
+            if (isD8Pressed)
+            {
+                events.Publish(new PlaySfxEvent("hand_gun1", 1f, true, _audioEmmitterRight));
             }
         }
 
