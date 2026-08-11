@@ -75,6 +75,7 @@ namespace GDGame
         private Transform _audioEmmitterLeft;
         private Transform _audioEmmitterRight;
         private bool _inAudioRoom = false;
+        private bool _showAudioRoomText = false;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -548,6 +549,25 @@ namespace GDGame
             rightEmitter.Transform.TranslateTo(new Vector3(-4f, 9f, 43f));
             _audioEmmitterRight = rightEmitter.Transform;
             _sceneManager.ActiveScene.Add(rightEmitter);
+        }
+
+        private void UpdateAudioRoomText()
+        {
+            var camera = _sceneManager.ActiveScene.ActiveCamera;
+
+            if (camera == null)
+                return;
+
+            Vector3 position = camera.GameObject.Transform.Position;
+
+            if (position.X >= -44f && position.X <= -0f && position.Z >= 20f && position.Z <= 65f)
+            {
+                _showAudioRoomText = true;
+            }
+            else
+            {
+                _showAudioRoomText = false;
+            }
         }
 
 
@@ -1243,6 +1263,27 @@ namespace GDGame
                 return
                 "Click 1 for first person, 2 for third person, 3 for overhead curved view. \n";
             };
+
+            //Audio room instructions text
+            var audioRoomInstructionsText = uiReticleGO.AddComponent<UIText>();
+            audioRoomInstructionsText.Font = uiFont;
+            audioRoomInstructionsText.Color = Color.White;
+            audioRoomInstructionsText.Anchor = TextAnchor.Bottom;
+
+            audioRoomInstructionsText.PositionProvider = () =>
+                new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height - 50);
+
+            audioRoomInstructionsText.TextProvider = () =>
+            {
+                if (!_showAudioRoomText)
+                    return string.Empty;
+                return
+                "Press 7 to interact with the left audio emitter. \n" +
+                "Press 8 to interact with the right audio emitter. \n" +
+                "Press G to interact with EventBus SFX \n"; 
+                //TODO - fix the menu volume changer thingy for music and sfx it doesn't work lol
+                //+"To change audio settings/audio, press ESC for menu, click on the audio settings.";
+            };
         }
 
         /// <summary>
@@ -1507,6 +1548,7 @@ namespace GDGame
 
             //Calling my own methods for audio room
             UpdateAudioRoom();
+            UpdateAudioRoomText();
 
             DemoEventPublish();
             DemoCameraSwitch();
