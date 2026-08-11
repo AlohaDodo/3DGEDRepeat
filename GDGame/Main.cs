@@ -74,6 +74,7 @@ namespace GDGame
         private bool _showCameraRoomText = false;
         private Transform _audioEmmitterLeft;
         private Transform _audioEmmitterRight;
+        private bool _inAudioRoom = false;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -502,6 +503,31 @@ namespace GDGame
             else
             {
                 _showCameraRoomText = false;
+            }
+        }
+
+        private void updateAudioRoom()
+        {
+            var firstPersonCamera = _sceneManager.ActiveScene.Find(go => go.Name == AppData.CAMERA_NAME_FIRST_PERSON);
+
+            if (firstPersonCamera == null) 
+                return;
+
+            Vector3 position = firstPersonCamera.Transform.Position;
+
+            bool insideAudioRoom = position.X >= -44f && position.X <= -0f && position.Z >= 20f && position.Z <= 65f;
+
+            if (insideAudioRoom && !_inAudioRoom)
+            {
+                _inAudioRoom = true;
+                EngineContext.Instance.Events.Publish(new StopMusicEvent());
+                EngineContext.Instance.Events.Publish(new PlayMusicEvent("audio_room_music", 1, 8));
+            }
+            else if (!insideAudioRoom && _inAudioRoom)
+            {
+                _inAudioRoom = false;
+                EngineContext.Instance.Events.Publish(new StopMusicEvent());
+                EngineContext.Instance.Events.Publish(new PlayMusicEvent("hub_music", 1, 8));
             }
         }
 
@@ -1473,6 +1499,9 @@ namespace GDGame
             //Calling my own method for camera room
             UpdateCameraRoomText();
 
+            //Calling my own methods for audio room
+            updateAudioRoom();
+
             DemoEventPublish();
             DemoCameraSwitch();
             DemoToggleFullscreen();
@@ -1584,10 +1613,11 @@ namespace GDGame
                     1, false, null));
             }
 
+            //test to see if the hub music plays/works
             bool isD4Pressed = _newKBState.IsKeyDown(Keys.D4) && !_oldKBState.IsKeyDown(Keys.D4);
             if (isD4Pressed)
             {
-                events.Publish(new PlayMusicEvent("secret_door", 1, 8));
+                events.Publish(new PlayMusicEvent("hub_music", 1, 8));
             }
 
             bool isD5Pressed = _newKBState.IsKeyDown(Keys.D5) && !_oldKBState.IsKeyDown(Keys.D5);

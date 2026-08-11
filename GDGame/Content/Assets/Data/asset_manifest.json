@@ -128,48 +128,49 @@
       "contentPath": "assets/textures/ui/backgrounds/controlsmenu_monkey"
     }
   ],
-  "models": [
-    {
-      "name": "monkey1",
-      "contentPath": "assets/models/monkey1"
-    },
-    {
-      "name": "cube",
-      "contentPath": "assets/models/cube"
-    },
-    {
-      "name": "teapot",
-      "contentPath": "assets/models/teapot"
-    },
-    {
-      "name": "teapot_lowpoly",
-      "contentPath": "assets/models/teapot_lowpoly"
-    },
-    {
-        "name": "plane",
-        "contentPath": "assets/models/plane"
-    },
-    {
-        "name": "ICAmap",
-        "contentPath": "assets/models/ICAmap"
-    },
-    {
-        "name": "bowlingLaneModel",
-        "contentPath": "assets/models/bowlingLane"
-    },
-    {
-        "name": "bowlingBallModel",
-        "contentPath": "assets/models/bowlingBall"
-    },
-    {
-        "name": "bowlingPinModel",
-        "contentPath": "assets/models/bowlingPin"
-    },
-    {
-        "name": "bowlingPinTestModel",
-        "contentPath": "assets/models/bowlingPinTest"
-    }
-  ],
+    "models": [
+        {
+            "name": "monkey1",
+            "contentPath": "assets/models/monkey1"
+        },
+        {
+            "name": "cube",
+            "contentPath": "assets/models/cube"
+        },
+        {
+            "name": "teapot",
+            "contentPath": "assets/models/teapot"
+        },
+        {
+            "name": "teapot_lowpoly",
+            "contentPath": "assets/models/teapot_lowpoly"
+        },
+        {
+            "name": "plane",
+            "contentPath": "assets/models/plane"
+        },
+        {
+            "name": "ICAmap",
+            "contentPath": "assets/models/ICAmap"
+        },
+        {
+            "name": "bowlingLaneModel",
+            "contentPath": "assets/models/bowlingLane"
+        },
+        {
+            "name": "bowlingBallModel",
+            "contentPath": "assets/models/bowlingBall"
+        },
+        {
+            "name": "bowlingPinModel",
+            "contentPath": "assets/models/bowlingPin"
+        },
+        {
+            "name": "bowlingPinTestModel",
+            "contentPath": "assets/models/bowlingPinTest"
+        }
+    ],
+  //Audio
   "sounds": [
     {
       "name": "explosion1",
@@ -200,8 +201,16 @@
       "contentPath": "assets/sounds/ui/SFX_UI_Click_Designed_Pop_Movement_Open_1"
     },
     {
-      "name": "SFX_UI_Click_Designed_Pop_Negative_Close_1",
-      "contentPath": "assets/sounds/ui/SFX_UI_Click_Designed_Pop_Negative_Close_1"
+        "name": "SFX_UI_Click_Designed_Pop_Negative_Close_1",
+        "contentPath": "assets/sounds/ui/SFX_UI_Click_Designed_Pop_Negative_Close_1"
+    },
+    {
+        "name": "hub_music",
+        "contentPath": "assets/sounds/hubMusic"
+    },
+    {
+        "name": "audio_room_music",
+        "contentPath": "assets/sounds/audioRoomMusic"
     }
   ],
   "effects": [
