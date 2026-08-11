@@ -506,7 +506,7 @@ namespace GDGame
             }
         }
 
-        private void updateAudioRoom()
+        private void UpdateAudioRoom()
         {
             var firstPersonCamera = _sceneManager.ActiveScene.Find(go => go.Name == AppData.CAMERA_NAME_FIRST_PERSON);
 
@@ -528,6 +528,12 @@ namespace GDGame
                 _inAudioRoom = false;
                 EngineContext.Instance.Events.Publish(new StopMusicEvent());
                 EngineContext.Instance.Events.Publish(new PlayMusicEvent("hub_music", 1, 8));
+            }
+
+            bool pressedG = _newKBState.IsKeyDown(Keys.G) && !_oldKBState.IsKeyDown(Keys.G);
+            if(insideAudioRoom && pressedG) 
+            {
+                EngineContext.Instance.Events.Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Mallet_Open_1", 1f, false, null));
             }
         }
 
@@ -1500,7 +1506,7 @@ namespace GDGame
             UpdateCameraRoomText();
 
             //Calling my own methods for audio room
-            updateAudioRoom();
+            UpdateAudioRoom();
 
             DemoEventPublish();
             DemoCameraSwitch();
