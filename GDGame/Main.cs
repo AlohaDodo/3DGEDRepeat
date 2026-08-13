@@ -79,6 +79,8 @@ namespace GDGame
         private bool _showOrchestrationRoomText = false;
         private string _orchestrationMessage = "";
         private bool _secretMonkeyMode = false;
+        private UIReticle _reticle;
+        private bool _showUIRoomHUD = false;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -251,7 +253,8 @@ namespace GDGame
                 _sceneManager.Paused = false;
                 _menuManager.HideMenus();
 
-                //fade out menu sound
+                IsMouseVisible = false;
+                _reticle.Enabled = true;
             };
 
             _menuManager.ExitRequested += () =>
@@ -264,8 +267,11 @@ namespace GDGame
                 // Forward to audio manager
                 System.Diagnostics.Debug.WriteLine("MusicVolumeChanged");
 
-                //raise event to set sound
-               // EngineContext.Instance.Events.Publish(new PlaySfxEvent)
+                var audioSystem = _sceneManager.ActiveScene.GetSystem<AudioSystem>();
+                if (audioSystem != null)
+                {
+                    audioSystem.SetChannelVolume(AudioMixer.AudioChannel.Music, v);
+                }
             };
 
             _menuManager.SfxVolumeChanged += v =>
@@ -273,10 +279,13 @@ namespace GDGame
                 // Forward to audio manager
                 System.Diagnostics.Debug.WriteLine("SfxVolumeChanged");
 
-                //raise event to set sound
+                var audioSystem = _sceneManager.ActiveScene.GetSystem<AudioSystem>();
+                if (audioSystem != null)
+                {
+                    audioSystem.SetChannelVolume(AudioMixer.AudioChannel.Music, v);
+                }
             };
 
-   
         }
 
         private void InitializeCollidableGround(int scale = 500)
@@ -638,6 +647,22 @@ namespace GDGame
             }
         }
 
+        private void UpdateUIRoomHUD()
+        {
+            var camera = _sceneManager.ActiveScene.ActiveCamera;
+            if (camera == null)
+                return;
+            Vector3 position = camera.GameObject.Transform.Position;
+            if (position.X >= -44f && position.X <= -21f && position.Z >= -21f && position.Z <= 20f)
+            {
+                _showUIRoomHUD = true;
+            }
+            else
+            {
+                _showUIRoomHUD = false;
+            }
+        }
+
 
         private void InitializePIPCamera(Vector3 position,
       Viewport viewport, int depth, int index = 0)
@@ -839,7 +864,8 @@ namespace GDGame
             InitializeGameStateSystem();   //manage and track game state
                                            //  InitializeNavMeshSystem();
 
-            InitializeDebugInfo(true);
+            //Turning off the debug info for submission
+            InitializeDebugInfo(false);
         }
 
         private void InitializeDebugInfo(bool showDebug)
@@ -1236,13 +1262,13 @@ namespace GDGame
             var uiFont = _fontDictionary.Get("mouse_reticle_font");
 
             // Reticle (cursor): always on top
-            var reticle = new UIReticle(reticleAtlas);
-            reticle.Origin = reticleAtlas.GetCenter();
-            reticle.SourceRectangle = null;
-            reticle.Scale = new Vector2(0.1f, 0.1f);
-            reticle.RotationSpeedDegPerSec = 55;
-            reticle.LayerDepth = UILayer.Cursor;
-            uiReticleGO.AddComponent(reticle);
+            _reticle = new UIReticle(reticleAtlas);
+            _reticle.Origin = reticleAtlas.GetCenter();
+            _reticle.SourceRectangle = null;
+            _reticle.Scale = new Vector2(0.1f, 0.1f);
+            _reticle.RotationSpeedDegPerSec = 55;
+            _reticle.LayerDepth = UILayer.Cursor;
+            uiReticleGO.AddComponent(_reticle);
 
             var textRenderer = uiReticleGO.AddComponent<UIText>();
             textRenderer.Font = uiFont;
@@ -1287,7 +1313,7 @@ namespace GDGame
 
             _sceneManager.ActiveScene.Add(uiReticleGO);
             // Hide mouse since reticle will take its place
-            IsMouseVisible = false;
+            IsMouseVisible = true;
 
             //Camera room instructions text
             var cameraRoomInstructionsText = uiReticleGO.AddComponent<UIText>();
@@ -1324,8 +1350,6 @@ namespace GDGame
                 "Press 7 to interact with the left audio emitter. \n" +
                 "Press 8 to interact with the right audio emitter. \n" +
                 "Press G to interact with EventBus SFX \n"; 
-                //TODO - fix the menu volume changer thingy for music and sfx it doesn't work lol
-                //+"To change audio settings/audio, press ESC for menu, click on the audio settings.";
             };
 
             //Orchestration room sequence text
@@ -1347,6 +1371,34 @@ namespace GDGame
 
                 return
                 "Press O to start the orchestration sequence. \n" + "Press R before the sequence for secret monkey mode.";
+            };
+
+            //UI room instructions text
+            var uiRoomInstructionsText = uiReticleGO.AddComponent<UIText>();
+            uiRoomInstructionsText.Font = uiFont;
+            uiRoomInstructionsText.Color = Color.White;
+            uiRoomInstructionsText.Anchor = TextAnchor.Bottom;
+
+            uiRoomInstructionsText.PositionProvider = () => new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height - 50);
+
+            uiRoomInstructionsText.TextProvider = () =>
+            {
+                if (!_showUIRoomHUD)
+                    return string.Empty;
+
+                var camera = _sceneManager.ActiveScene.ActiveCamera;
+
+                if (camera == null)
+                    return string.Empty;
+
+                Vector3 position = camera.GameObject.Transform.Position;
+
+                return
+                "UI & INPUT SYSTEM \n\n"
+                + $"Camera X : {position.X:F1} \n"
+                + $"Camera Y : {position.Y:F1} \n"
+                + $"Camera Z : {position.Z:F1} \n"
+                + $"Elapsed Time : {Time.RealtimeSinceStartupSecs:F1}";
             };
         }
 
@@ -1617,6 +1669,9 @@ namespace GDGame
             //Calling my own method for orchestration room
             DemoOrchestrationSystem();
             UpdateOrchestrationRoomText();
+
+            //Calling my own method for UI room
+            UpdateUIRoomHUD();
 
 
             DemoEventPublish();

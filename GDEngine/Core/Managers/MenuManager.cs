@@ -320,9 +320,9 @@ namespace GDEngine.Core.Managers
                 _sliderTrackTexture!,
                 _sliderHandleTexture!,
                 _font!,
-                1,
-                10,
-                5,
+                0f,
+                1f,
+                0.5f,
                 OnMusicSliderChanged,
                 Color.Black);
 
