@@ -129,6 +129,9 @@ namespace GDGame
 
             //Audio room
             InitializeAudioRoom();
+
+            //Orchestration room
+            InitializeOrchestrationRoom();
             #endregion
 
             //#region Demos
@@ -568,6 +571,38 @@ namespace GDGame
             {
                 _showAudioRoomText = false;
             }
+        }
+
+        private void InitializeOrchestrationRoom()
+        {
+            //Create
+            GameObject crate = InitializeModel(new Vector3 (22f, 5f, 43f), new Vector3(0, 0, 0), 5 * Vector3.One, "crate1", "cube", "OrchestrationCrate");
+
+            //Monkey model
+            GameObject monkey = InitializeModel(new Vector3 (22f, 6f, 43f), Vector3.Zero, 0.01f * Vector3.One, "pink", "monkey1", "OrchestrationMonkey");
+
+            var orchestrator = _sceneManager.ActiveScene.GetSystem<OrchestrationSystem>().Orchestrator;
+            orchestrator.Build("Orchestration room")
+
+                //Step 1 The crate grows/gets bigger
+                .ScaleTo(crate.Transform, 7 * Vector3.One, 1f)
+
+                //Step 2 Wait
+                .WaitSeconds(0.5f)
+
+                //Step 3 The crate dissapears
+                .ScaleTo(crate.Transform, 0.01f * Vector3.One, 0.5f)
+
+                //Step 4 The monkey appears (the reveal)
+                .ScaleTo(monkey.Transform, 5 * Vector3.One, 1f)
+
+                //Resetting the monkey and crate so that the sequence can be repeated
+                .WaitSeconds(2f)
+                .ScaleTo(monkey.Transform, 0.01f * Vector3.One, 0.5f)
+                .ScaleTo(crate.Transform, 5 * Vector3.One, 0.5f)
+
+
+                .Register();
         }
 
 
@@ -1550,11 +1585,13 @@ namespace GDGame
             UpdateAudioRoom();
             UpdateAudioRoomText();
 
+            //Calling my own method for orchestration room
+            DemoOrchestrationSystem();
+
             DemoEventPublish();
             DemoCameraSwitch();
             DemoToggleFullscreen();
             DemoAudioSystem();
-            DemoOrchestrationSystem();
             DemoImpulsePublish();
             //a demo relating to GameStateSystem
             _currentHealth--;
@@ -1627,26 +1664,33 @@ namespace GDGame
         {
             var orchestrator = _sceneManager.ActiveScene.GetSystem<OrchestrationSystem>().Orchestrator;
 
+            //bool isPressed = _newKBState.IsKeyDown(Keys.O) && !_oldKBState.IsKeyDown(Keys.O);
+            //if (isPressed)
+            //{
+            //    orchestrator.Build("my first sequence")
+            //        .WaitSeconds(2)
+            //        .Publish(new CameraEvent(AppData.CAMERA_NAME_FIRST_PERSON))
+            //        .WaitSeconds(2)
+            //        .Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Generic_1", 1, false, null))
+            //        .Register();
+
+            //    orchestrator.Start("my first sequence", _sceneManager.ActiveScene, EngineContext.Instance);
+            //}
+
+            //bool isIPressed = _newKBState.IsKeyDown(Keys.I) && !_oldKBState.IsKeyDown(Keys.I);
+            //if (isIPressed)
+            //    orchestrator.Pause("my first sequence");
+
+            //bool isPPressed = _newKBState.IsKeyDown(Keys.P) && !_oldKBState.IsKeyDown(Keys.P);
+            //if (isPPressed)
+            //    orchestrator.Resume("my first sequence");
+
+            //My orchestration room demo
             bool isPressed = _newKBState.IsKeyDown(Keys.O) && !_oldKBState.IsKeyDown(Keys.O);
             if (isPressed)
             {
-                orchestrator.Build("my first sequence")
-                    .WaitSeconds(2)
-                    .Publish(new CameraEvent(AppData.CAMERA_NAME_FIRST_PERSON))
-                    .WaitSeconds(2)
-                    .Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Generic_1", 1, false, null))
-                    .Register();
-
-                orchestrator.Start("my first sequence", _sceneManager.ActiveScene, EngineContext.Instance);
+                orchestrator.Start("Orchestration room", _sceneManager.ActiveScene, EngineContext.Instance);
             }
-
-            bool isIPressed = _newKBState.IsKeyDown(Keys.I) && !_oldKBState.IsKeyDown(Keys.I);
-            if (isIPressed)
-                orchestrator.Pause("my first sequence");
-
-            bool isPPressed = _newKBState.IsKeyDown(Keys.P) && !_oldKBState.IsKeyDown(Keys.P);
-            if (isPPressed)
-                orchestrator.Resume("my first sequence");
         }
 
         private void DemoAudioSystem()
