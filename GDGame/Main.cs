@@ -78,6 +78,7 @@ namespace GDGame
         private bool _showAudioRoomText = false;
         private bool _showOrchestrationRoomText = false;
         private string _orchestrationMessage = "";
+        private bool _secretMonkeyMode = false;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -603,11 +604,20 @@ namespace GDGame
                 .Do(sequence => _orchestrationMessage = "SURPRISE!!!!!!!!!!!! \n" + "The monkey has appeared! :D")
                 .ScaleTo(monkey.Transform, 5 * Vector3.One, 1f)
 
+                //If R is pressed the secret monkey mode is activated
+                .If(context => _secretMonkeyMode,branch =>
+                {
+                    branch.Do(sequence => _orchestrationMessage = "SECRET MONKEY MODE ACTIVATED!");
+                })
+
                 //Resetting the monkey and crate so that the sequence can be repeated
                 .WaitSeconds(2f)
                 .ScaleTo(monkey.Transform, 0.01f * Vector3.One, 0.5f)
                 .ScaleTo(crate.Transform, 5 * Vector3.One, 0.5f)
+                .Do(sequence => _orchestrationMessage = "")
+                .Do(sequence => _secretMonkeyMode = false)
                 .Publish(new CameraEvent(AppData.CAMERA_NAME_FIRST_PERSON))
+                
 
                 .Register();
         }
@@ -1336,7 +1346,7 @@ namespace GDGame
                 }
 
                 return
-                "Press O to start the orchestration sequence. \n";
+                "Press O to start the orchestration sequence. \n" + "Press R before the sequence for secret monkey mode.";
             };
         }
 
@@ -1707,6 +1717,12 @@ namespace GDGame
             //    orchestrator.Resume("my first sequence");
 
             //My orchestration room demo
+            bool isRPressed = _newKBState.IsKeyDown(Keys.R) && !_oldKBState.IsKeyDown(Keys.R);
+            if (isRPressed)
+            {
+                _secretMonkeyMode = !_secretMonkeyMode;
+            }
+        
             bool isPressed = _newKBState.IsKeyDown(Keys.O) && !_oldKBState.IsKeyDown(Keys.O);
             if (isPressed)
             {
