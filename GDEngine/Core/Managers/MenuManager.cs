@@ -49,6 +49,7 @@ namespace GDEngine.Core.Managers
         // Controls menu controls
         private UIButton? _controlsBackButton;
         private UITexture? _controlsLayoutTexture;
+        private UIButton? _debugInfoButton;
 
         // Assets
         private Texture2D? _buttonTexture;
@@ -96,6 +97,9 @@ namespace GDEngine.Core.Managers
         /// Raised when the SFX slider value changes (0-1 by default).
         /// </summary>
         public event Action<float>? SfxVolumeChanged;
+
+        //Apart of UI room. Be able to turn on debug info. it can be turned on through the menu then controls.
+        public event Action? DebugToggleRequested;
         #endregion
 
         #region Constructors
@@ -372,6 +376,13 @@ namespace GDEngine.Core.Managers
                 controlsBg.LayerDepth = UILayer.MenuBack;
             }
 
+            _debugInfoButton = _controlsMenuPanel.AddButton(
+                "Toggle Debug Info",
+                _buttonTexture!,
+                _font!,
+                OnDebugClicked,
+                Color.Orange);
+
             _controlsBackButton = _controlsMenuPanel.AddButton(
                 "Back",
                 _buttonTexture!,
@@ -435,6 +446,12 @@ namespace GDEngine.Core.Managers
         private void OnControlsClicked()
         {
             ShowControlsMenu();
+        }
+
+        private void OnDebugClicked()
+        {
+            // Toggle debug info
+            DebugToggleRequested?.Invoke();
         }
 
         private void OnExitClicked()

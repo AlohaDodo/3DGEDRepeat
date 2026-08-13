@@ -282,10 +282,17 @@ namespace GDGame
                 var audioSystem = _sceneManager.ActiveScene.GetSystem<AudioSystem>();
                 if (audioSystem != null)
                 {
-                    audioSystem.SetChannelVolume(AudioMixer.AudioChannel.Music, v);
+                    audioSystem.SetChannelVolume(AudioMixer.AudioChannel.Sfx, v);
                 }
             };
 
+            _menuManager.DebugToggleRequested += () =>
+            {
+                if (_debugRenderer != null)
+                {
+                    _debugRenderer.Enabled = !_debugRenderer.Enabled;
+                }
+            };
         }
 
         private void InitializeCollidableGround(int scale = 500)
@@ -864,8 +871,7 @@ namespace GDGame
             InitializeGameStateSystem();   //manage and track game state
                                            //  InitializeNavMeshSystem();
 
-            //Turning off the debug info for submission
-            InitializeDebugInfo(false);
+            InitializeDebugInfo(true);
         }
 
         private void InitializeDebugInfo(bool showDebug)
@@ -892,6 +898,9 @@ namespace GDGame
                 _debugRenderer.Providers.Add(_sceneManager);
 
                 _sceneManager.ActiveScene.Add(debugGO);
+
+                //Starting the game hidden so it can be turned on by going into the menu and controls
+                _debugRenderer.Enabled = false;
             }
         }
 
