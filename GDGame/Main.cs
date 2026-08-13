@@ -76,6 +76,8 @@ namespace GDGame
         private Transform _audioEmmitterRight;
         private bool _inAudioRoom = false;
         private bool _showAudioRoomText = false;
+        private bool _showOrchestrationRoomText = false;
+        private string _orchestrationMessage = "";
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -576,15 +578,18 @@ namespace GDGame
         private void InitializeOrchestrationRoom()
         {
             //Create
-            GameObject crate = InitializeModel(new Vector3 (22f, 5f, 43f), new Vector3(0, 0, 0), 5 * Vector3.One, "crate1", "cube", "OrchestrationCrate");
+            GameObject crate = InitializeModel(new Vector3 (22f, 5f, 52f), new Vector3(0, 0, 0), 5 * Vector3.One, "crate1", "cube", "OrchestrationCrate");
 
             //Monkey model
-            GameObject monkey = InitializeModel(new Vector3 (22f, 6f, 43f), Vector3.Zero, 0.01f * Vector3.One, "pink", "monkey1", "OrchestrationMonkey");
+            GameObject monkey = InitializeModel(new Vector3 (22f, 6f, 52f), Vector3.Zero, 0.01f * Vector3.One, "pink", "monkey1", "OrchestrationMonkey");
 
             var orchestrator = _sceneManager.ActiveScene.GetSystem<OrchestrationSystem>().Orchestrator;
             orchestrator.Build("Orchestration room")
 
+                .Publish(new CameraEvent(AppData.CAMERA_NAME_ORCHESTRATION))
+
                 //Step 1 The crate grows/gets bigger
+                .Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Mallet_Open_1", 1f, false, null))
                 .ScaleTo(crate.Transform, 7 * Vector3.One, 1f)
 
                 //Step 2 Wait
@@ -594,15 +599,33 @@ namespace GDGame
                 .ScaleTo(crate.Transform, 0.01f * Vector3.One, 0.5f)
 
                 //Step 4 The monkey appears (the reveal)
+                .Publish(new PlaySfxEvent("SFX_UI_Click_Designed_Pop_Mallet_Open_1", 1f, false, null))
+                .Do(sequence => _orchestrationMessage = "SURPRISE!!!!!!!!!!!! \n" + "The monkey has appeared! :D")
                 .ScaleTo(monkey.Transform, 5 * Vector3.One, 1f)
 
                 //Resetting the monkey and crate so that the sequence can be repeated
                 .WaitSeconds(2f)
                 .ScaleTo(monkey.Transform, 0.01f * Vector3.One, 0.5f)
                 .ScaleTo(crate.Transform, 5 * Vector3.One, 0.5f)
-
+                .Publish(new CameraEvent(AppData.CAMERA_NAME_FIRST_PERSON))
 
                 .Register();
+        }
+
+        private void UpdateOrchestrationRoomText()
+        {
+            var camera = _sceneManager.ActiveScene.ActiveCamera;
+            if (camera == null)
+                return;
+            Vector3 position = camera.GameObject.Transform.Position;
+            if (position.X >= 1f && position.X <= 43f && position.Z >= 22f && position.Z <= 64f)
+            {
+                _showOrchestrationRoomText = true;
+            }
+            else
+            {
+                _showOrchestrationRoomText = false;
+            }
         }
 
 
@@ -1003,41 +1026,6 @@ namespace GDGame
             scene.Add(cameraGO);
             #endregion
 
-            //#region First-person capsule + camera (parent/child) 
-
-            //// PARENT: physics + movement (feet at y = 0 here)
-            //var parentGO = new GameObject(AppData.CAMERA_NAME_FIRST_PERSON_PARENT);
-            //parentGO.Layer = LayerMask.IgnoreRaycast;
-            //parentGO.Transform.TranslateTo(new Vector3(0f, 10f, 15f));
-
-            //// Capsule + rigidbody controller (kept upright internally)
-            //var fpsController = parentGO.AddComponent<FirstPersonCapsuleController>();
-            //fpsController.MoveSpeed = 8.0f;
-            //fpsController.Acceleration = 50.0f;
-            //fpsController.GroundFriction = 10.0f;
-            //fpsController.JumpImpulse = 7.0f;
-            //fpsController.CapsuleRadius = 0.5f;
-            //fpsController.CapsuleHeight = 1.8f;
-            //fpsController.GroundCheckDistance = 0.25f;
-
-            //// camera that can pitch + yaw without affecting the collider
-            //cameraGO = new GameObject(AppData.CAMERA_NAME_FIRST_PERSON);
-            //cameraGO.Transform.SetParent(parentGO.Transform);
-
-            //// Local offset from feet → eye height
-            //cameraGO.Transform.TranslateTo(new Vector3(0, 1.6f, 0));
-            //camera = cameraGO.AddComponent<Camera>();
-            //camera.FieldOfView = MathHelper.ToRadians(80.0f);
-            //var mouseLook = cameraGO.AddComponent<MouseYawPitchController>();
-
-            //// Add both objects to the scene so their components are updated
-            //scene.Add(parentGO);
-            //scene.Add(cameraGO);
-
-            //// Make this the active camera
-            //scene.ActiveCamera = camera;
-            //#endregion
-
             #region First person camera
             //camera GO
             cameraGO = new GameObject(AppData.CAMERA_NAME_FIRST_PERSON);
@@ -1060,7 +1048,6 @@ namespace GDGame
             scene.SetActiveCamera(AppData.CAMERA_NAME_FIRST_PERSON);
             #endregion 
 
-
             #region Curve camera
             cameraGO = new GameObject(AppData.CAMERA_NAME_INTRO_CURVE);
             cameraGO.Transform.RotateEulerBy(new Vector3(MathHelper.ToRadians(-90), 0, 0));
@@ -1071,6 +1058,17 @@ namespace GDGame
             curveController.PositionCurve = BuildCameraPositionCurve(CurveLoopType.Oscillate);
             curveController.TargetCurve = BuildCameraTargetCurve(CurveLoopType.Constant);
             curveController.Duration = 10;
+            scene.Add(cameraGO);
+            #endregion
+
+            #region Orchestration camera
+            cameraGO = new GameObject(AppData.CAMERA_NAME_ORCHESTRATION);
+            cameraGO.Transform.TranslateTo(new Vector3(22f, 8f, 40f));
+            cameraGO.Transform.RotateEulerBy(new Vector3(MathHelper.ToRadians(-12f), MathHelper.ToRadians(180f), 0));
+            camera = cameraGO.AddComponent<Camera>();
+            camera.FieldOfView = MathHelper.ToRadians(70f);
+            camera.FarPlane = 1000f;
+            camera.AspectRatio = (float)_graphics.PreferredBackBufferWidth / _graphics.PreferredBackBufferHeight;
             scene.Add(cameraGO);
             #endregion
 
@@ -1318,6 +1316,27 @@ namespace GDGame
                 "Press G to interact with EventBus SFX \n"; 
                 //TODO - fix the menu volume changer thingy for music and sfx it doesn't work lol
                 //+"To change audio settings/audio, press ESC for menu, click on the audio settings.";
+            };
+
+            //Orchestration room sequence text
+            var orchestrationText = uiReticleGO.AddComponent<UIText>();
+            orchestrationText.Font = uiFont;
+            orchestrationText.Color = Color.White;
+            orchestrationText.Anchor = TextAnchor.Bottom;
+
+            orchestrationText.PositionProvider = () => new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height - 50);
+            orchestrationText.TextProvider = () =>
+            {
+                if (!_showOrchestrationRoomText)
+                    return string.Empty;
+
+                if (!string.IsNullOrEmpty(_orchestrationMessage))
+                {
+                    return _orchestrationMessage;
+                }
+
+                return
+                "Press O to start the orchestration sequence. \n";
             };
         }
 
@@ -1587,6 +1606,8 @@ namespace GDGame
 
             //Calling my own method for orchestration room
             DemoOrchestrationSystem();
+            UpdateOrchestrationRoomText();
+
 
             DemoEventPublish();
             DemoCameraSwitch();
@@ -1689,6 +1710,7 @@ namespace GDGame
             bool isPressed = _newKBState.IsKeyDown(Keys.O) && !_oldKBState.IsKeyDown(Keys.O);
             if (isPressed)
             {
+                _orchestrationMessage = "Opening crate...... :0";
                 orchestrator.Start("Orchestration room", _sceneManager.ActiveScene, EngineContext.Instance);
             }
         }
