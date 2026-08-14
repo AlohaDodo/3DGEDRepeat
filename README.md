@@ -1,4 +1,4 @@
-Dorota Kaminska GD3 - 3DGED repeat
+# Dorota Kaminska GD3 - 3DGED repeat
 
 ## Project overview
 This project is an interactive 3D feature showcase created using the GD Engine. The environment is designed as a central hub connected to five demonstration rooms with each room focusing on a different engine system : Physics, Audio, Camera, Orchestration and UI & Input. I modelled the showcase map myself in Blender and imported it into the project as the main environment.
