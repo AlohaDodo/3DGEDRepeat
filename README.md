@@ -43,4 +43,4 @@ I used on screen annotations that only appear when the player enters the relevan
 
 
 ## Screencast
-Coming soon
+https://youtu.be/XoTemzcC85Y
