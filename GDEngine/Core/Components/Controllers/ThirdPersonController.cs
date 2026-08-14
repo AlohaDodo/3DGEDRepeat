@@ -43,7 +43,7 @@ namespace GDEngine.Core.Components
         private int _previousScrollValue;
         private float _zoomSensitivity = 0.01f;   // Units per raw scroll step (120 units per notch in MonoGame)
         private float _minFollowDistance = 2f;
-        private float _maxFollowDistance = 30f;
+        private float _maxFollowDistance = 15f;
         #endregion
 
         #region Properties

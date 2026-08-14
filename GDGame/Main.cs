@@ -877,7 +877,8 @@ namespace GDGame
         private void InitializeSystems()
         {
             InitializePhysicsSystem();
-            InitializePhysicsDebugSystem(true);
+            //Disabled the box colliders colored thing for submission - cleaner look
+            InitializePhysicsDebugSystem(false);
             InitializeEventSystem();  //propagate events  
             InitializeInputSystem();  //input
             InitializeCameraAndRenderSystems(); //update cameras, draw renderable game objects, draw ui and menu
@@ -889,6 +890,7 @@ namespace GDGame
                                            //  InitializeNavMeshSystem();
 
             InitializeDebugInfo(true);
+            StartHubMusic();
         }
 
         private void InitializeDebugInfo(bool showDebug)
@@ -1364,7 +1366,7 @@ namespace GDGame
                 + "API : Camera, CurveController, CameraEvent \n"
                 + "This room demonstrates multiple camera systems in action. \n"
                 + "1 = First Person Camera (W A S D)\n"
-                + "2 = Third Person Camera (U H J K)\n"
+                + "2 = Third Person Camera (U H J K) You can also scroll to zoom in and out. \n"
                 + "3 = Overhead Curved Camera \n"
                 + "Observe the different camera perspectives in action.";
             };
@@ -1467,6 +1469,11 @@ namespace GDGame
                 + "Navigate through the environment using W A S D. \n"
                 + "Use the controls button to toggle debug info, and use the settings button to adjust volume. \n";
             };
+        }
+
+        private void StartHubMusic()
+        {
+            EngineContext.Instance.Events.Publish(new PlayMusicEvent("hub_music", 1f, 2f));
         }
 
         /// <summary>
