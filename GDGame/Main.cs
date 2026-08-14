@@ -81,6 +81,7 @@ namespace GDGame
         private bool _secretMonkeyMode = false;
         private UIReticle _reticle;
         private bool _showUIRoomHUD = false;
+        private bool _showHubText = false;
         #endregion
 
         #region Core Methods (Common to all games)     
@@ -667,6 +668,22 @@ namespace GDGame
             else
             {
                 _showUIRoomHUD = false;
+            }
+        }
+
+        private void UpdateHubText()
+        {
+            var camera = _sceneManager.ActiveScene.ActiveCamera;
+            if (camera == null)
+                return;
+            Vector3 position = camera.GameObject.Transform.Position;
+            if (position.X >= -21f && position.X <= 21f && position.Z >= -22f && position.Z <= 20f)
+            {
+                _showHubText = true;
+            }
+            else
+            {
+                _showHubText = false;
             }
         }
 
@@ -1317,7 +1334,11 @@ namespace GDGame
                     return string.Empty;
 
                 return
-                "Walk towards the bowling ball. Press B to launch it. \n";
+                "PHYSICS SYSTEM\n"
+                + "API : PhysicsSystem, RigidBody, Collider, Raycast\n"
+                + "Walk towards the bowling ball and aim at it. \n"
+                + "Press B to launch it/apply an impulse. \n"
+                + "Observe the rigidbodies colliding with each other.";
             };
 
             _sceneManager.ActiveScene.Add(uiReticleGO);
@@ -1339,7 +1360,13 @@ namespace GDGame
                     return string.Empty;
 
                 return
-                "Click 1 for first person, 2 for third person, 3 for overhead curved view. \n";
+                "CAMERA SYSTEM \n"
+                + "API : Camera, CurveController, CameraEvent \n"
+                + "This room demonstrates multiple camera systems in action. \n"
+                + "1 = First Person Camera (W A S D)\n"
+                + "2 = Third Person Camera (U H J K)\n"
+                + "3 = Overhead Curved Camera \n"
+                + "Observe the different camera perspectives in action.";
             };
 
             //Audio room instructions text
@@ -1356,9 +1383,13 @@ namespace GDGame
                 if (!_showAudioRoomText)
                     return string.Empty;
                 return
-                "Press 7 to interact with the left audio emitter. \n" +
-                "Press 8 to interact with the right audio emitter. \n" +
-                "Press G to interact with EventBus SFX \n"; 
+                "AUDIO SYSTEM \n"
+                + "API : AudioSystem, AudioEmitter, EventBus \n"
+                + "This room demonstrates spatial 3D audio and event bus audio. \n"
+                + "Press 7 to interact with the left audio emitter. \n"
+                + "Press 8 to interact with the right audio emitter. \n" 
+                + "Press G to interact with EventBus SFX \n"
+                + "You can also adjust the volume of music and SFX in the settings \n"; 
             };
 
             //Orchestration room sequence text
@@ -1379,7 +1410,11 @@ namespace GDGame
                 }
 
                 return
-                "Press O to start the orchestration sequence. \n" + "Press R before the sequence for secret monkey mode.";
+                "ORCHESTRATION SYSTEM \n"
+                + "API : OrchestrationSystem, Orchestrator.Builder \n."
+                + "Press O to start the orchestration sequence. \n"
+                + "Press R before the sequence for secret monkey mode. \n" 
+                + "Observe the crate transform, camera change, UI updates and SFX. \n";
             };
 
             //UI room instructions text
@@ -1403,11 +1438,34 @@ namespace GDGame
                 Vector3 position = camera.GameObject.Transform.Position;
 
                 return
-                "UI & INPUT SYSTEM \n\n"
+                "UI & INPUT SYSTEM \n"
+                + "API : UIRenderSystem, InputSystem, UIText, UIButton, UISlider. \n"
+                + "This room demonstrates the live HUD of XYZ camera position and elapsed time. \n"
+                + "Use the menu, use the controls button to toggle debug info, and use the settings button to adjust volume. \n"
                 + $"Camera X : {position.X:F1} \n"
                 + $"Camera Y : {position.Y:F1} \n"
                 + $"Camera Z : {position.Z:F1} \n"
                 + $"Elapsed Time : {Time.RealtimeSinceStartupSecs:F1}";
+            };
+
+            //Hub text
+            var hubInstructionsText = uiReticleGO.AddComponent<UIText>();
+            hubInstructionsText.Font = uiFont;
+            hubInstructionsText.Color = Color.White;
+            hubInstructionsText.Anchor = TextAnchor.Bottom;
+
+            hubInstructionsText.PositionProvider = () => new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2, _graphics.GraphicsDevice.Viewport.Height - 50);
+
+            hubInstructionsText.TextProvider = () =>
+            {
+                if (!_showHubText)
+                    return string.Empty;
+                return
+                "HUB/ENGINE SHOWCASE \n"
+                + "API : UIRenderSystem, AudioSystem. \n"
+                + "This hub provides access to the five engine demonstration rooms. \n"
+                + "Navigate through the environment using W A S D. \n"
+                + "Use the controls button to toggle debug info, and use the settings button to adjust volume. \n";
             };
         }
 
@@ -1681,6 +1739,9 @@ namespace GDGame
 
             //Calling my own method for UI room
             UpdateUIRoomHUD();
+
+            //Calling my own method for hub
+            UpdateHubText();
 
 
             DemoEventPublish();
