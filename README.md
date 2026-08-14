@@ -17,7 +17,7 @@ I chose Orchestration because I wanted to create a sequence that combined severa
 I chose UI & Input because I wanted to demonstrate how the engine UI can interact with the game. The room contains a live HUD showing camera position and elapsed time. I didn’t want the live HUD showing in each room so I added a menu control that allows the player to toggle the debug information using a button. I also added menu controls that allow the player to change the music and SFX volume using sliders.
 
 
-##Design pattern - Observer
+## Design pattern - Observer
 The design pattern I chose to demonstrate is the Observer pattern. I use the engine’s EventBus to publish events which other systems can listen for and respond to. The EventBus acts as the subject while the systems listening for events act as the observers. I use this across multiple parts of the showcase. For example ; the audio room publishes PlaySfxEvent and PlayMusicEvent, while the orchestration room publishes CameraEvent and PlaySfxEvent during its sequence. This allows different systems to react to events without the rooms needing to directly control those systems.
 
 
@@ -27,19 +27,19 @@ One of my main design decisions was to create the whole environment as one conne
 I used on screen annotations that only appear when the player enters the relevant area, keeping the rest of the screen clear. I also reused the existing engine systems and components where possible such as the EventBus, UI components and orchestration system instead of creating separate systems for features the engine already had.
 
 
-##Controls
-- ##WASD## - First person
-- ##UHJK## - Third person
-- ##Mouse## - Look around/Zoom in and out
-- ##ESC## - Open/pause the menu
-- ##B## - Launch the bowling ball
-- ##1 / 2 / 3## - Switch between camera modes
-- ##7 / 8## - Interact with the spatial audio emitters
-- ##G## - Trigger the EventBus SFX in the audio room
-- ##O## - Start orchestration sequence
-- ##R## - Toggle the secret monkey mode before starting the sequence
-- ##Menu sliders## - Adjust music and SFX volume
-- ##Debug info button## - Toggle the engine debug information
+## Controls
+- WASD - First person
+- UHJK - Third person
+- Mouse - Look around/Zoom in and out
+- ESC - Open/pause the menu
+- B - Launch the bowling ball
+- 1 / 2 / 3 - Switch between camera modes
+- 7 / 8 - Interact with the spatial audio emitters
+- G - Trigger the EventBus SFX in the audio room
+- O - Start orchestration sequence
+- R - Toggle the secret monkey mode before starting the sequence
+- Menu sliders - Adjust music and SFX volume
+- Debug info button - Toggle the engine debug information
 
 
 ## Screencast
